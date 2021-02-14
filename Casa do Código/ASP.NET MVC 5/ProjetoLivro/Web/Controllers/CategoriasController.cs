@@ -17,6 +17,11 @@ namespace Web.Controllers
 
         public ActionResult Index()
         {
+            return View(categorias);
+        }
+
+        public ActionResult Novo()
+        {
             return View();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Web.Models;
 
@@ -23,6 +24,21 @@ namespace Web.Controllers
         public ActionResult Novo()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Novo(Categoria categoria)
+        {
+            categoria.Id = categorias.Select(c => c.Id).Max() + 1;
+            categorias.Add(categoria);
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Editar(long id)
+        {
+            return View(categorias.Where(m => m.Id == id).First());
         }
     }
 }

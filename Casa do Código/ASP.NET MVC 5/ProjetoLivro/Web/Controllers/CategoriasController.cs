@@ -55,7 +55,7 @@ namespace Web.Controllers
             return View(categorias.Where(c => c.Id == id).First());
         }
 
-        public ActionResult Delete(long id)
+        public ActionResult Excluir(long id)
         {
             return View(categorias.Where(c => c.Id == id).First());
         }

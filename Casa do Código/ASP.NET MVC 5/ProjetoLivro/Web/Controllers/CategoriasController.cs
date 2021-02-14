@@ -18,7 +18,7 @@ namespace Web.Controllers
 
         public ActionResult Index()
         {
-            return View(categorias);
+            return View(categorias.OrderBy(c => c.Nome));
         }
 
         public ActionResult Novo()
@@ -38,7 +38,35 @@ namespace Web.Controllers
 
         public ActionResult Editar(long id)
         {
-            return View(categorias.Where(m => m.Id == id).First());
+            return View(categorias.Where(c => c.Id == id).First());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Editar(Categoria categoria)
+        {
+            categorias[categorias.IndexOf(categorias.Where(c => c.Id == categoria.Id).First())] = categoria;
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Consultar(long id)
+        {
+            return View(categorias.Where(c => c.Id == id).First());
+        }
+
+        public ActionResult Delete(long id)
+        {
+            return View(categorias.Where(c => c.Id == id).First());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Excluir(Categoria categoria)
+        {
+            categorias.Remove(categorias.Where(c => c.Id == categoria.Id).First());
+
+            return RedirectToAction("Index");
         }
     }
 }

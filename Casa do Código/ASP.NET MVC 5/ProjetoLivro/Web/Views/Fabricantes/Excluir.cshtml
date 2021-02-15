@@ -7,7 +7,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Dados do fabricante a ser removido
+        Dados do fabricante a ser excluído
     </div>
     <div class="panel-body">
         <div class="form-group">
@@ -24,7 +24,7 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            <input type="submit" value="Remover FABRICANTE" class="btn btn-danger" />
+            <input type="submit" value="Excluir FABRICANTE" class="btn btn-danger" />
             @Html.ActionLink("Retornar para a listagem", "Index", null, new { @class = "btn btn-info" })
         }
     </div>

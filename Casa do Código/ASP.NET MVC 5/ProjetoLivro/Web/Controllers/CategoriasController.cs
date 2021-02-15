@@ -1,24 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
+using Web.Contexts;
 using Web.Models;
 
 namespace Web.Controllers
 {
     public class CategoriasController : Controller
     {
-        private static readonly IList<Categoria> categorias = new List<Categoria>()
-            {
-                new Categoria() { Id = 1, Nome = "Notebooks" },
-                new Categoria() { Id = 2, Nome = "Monitores" },
-                new Categoria() { Id = 3, Nome = "Impressoras" },
-                new Categoria() { Id = 4, Nome = "Mouses" },
-                new Categoria() { Id = 5, Nome = "Desktops" }
-            };
+        private EFContext context = new EFContext();
 
         public ActionResult Index()
         {
-            return View(categorias.OrderBy(c => c.Nome));
+            return View(context.Categorias.OrderBy(c => c.Nome));
         }
 
         public ActionResult Novo()
@@ -30,41 +25,86 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Novo(Categoria categoria)
         {
-            categoria.Id = categorias.Select(c => c.Id).Max() + 1;
-            categorias.Add(categoria);
+            context.Categorias.Add(categoria);
+            context.SaveChanges();
 
             return RedirectToAction("Index");
         }
 
-        public ActionResult Editar(long id)
+        public ActionResult Editar(long? id)
         {
-            return View(categorias.Where(c => c.Id == id).First());
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Categoria categoria = context.Categorias.Find(id);
+
+            if (categoria == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(categoria);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Editar(Categoria categoria)
         {
-            categorias[categorias.IndexOf(categorias.Where(c => c.Id == categoria.Id).First())] = categoria;
+            if (ModelState.IsValid)
+            {
+                context.Entry(categoria).State = EntityState.Modified;
+                context.SaveChanges();
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+
+            return View(categoria);
         }
 
-        public ActionResult Consultar(long id)
+        public ActionResult Consultar(long? id)
         {
-            return View(categorias.Where(c => c.Id == id).First());
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Categoria categoria = context.Categorias.Find(id);
+
+            if (categoria == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(categoria);
         }
 
-        public ActionResult Excluir(long id)
+        public ActionResult Excluir(long? id)
         {
-            return View(categorias.Where(c => c.Id == id).First());
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Categoria categoria = context.Categorias.Find(id);
+
+            if (categoria == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(categoria);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Excluir(Categoria categoria)
+        public ActionResult Excluir(long id)
         {
-            categorias.Remove(categorias.Where(c => c.Id == categoria.Id).First());
+            Categoria categoria = context.Categorias.Find(id);
+            context.Categorias.Remove(categoria);
+            context.SaveChanges();
+            TempData["Mensagem"] = "Categoria " + categoria.Nome.ToUpper() + " foi removido";
 
             return RedirectToAction("Index");
         }

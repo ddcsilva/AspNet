@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Web.Models.Fabricante>
 
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -30,7 +30,7 @@
             </td>
             <td>
                 @Html.ActionLink("Editar", "Editar", new { id=item.Id }) |
-                @Html.ActionLink("Consultar", "Consultar", new { id=item.Id }) |
+                @Html.ActionLink("Consulta", "Consulta", new { id=item.Id }) |
                 @Html.ActionLink("Excluir", "Excluir", new { id=item.Id })
             </td>
         </tr>
